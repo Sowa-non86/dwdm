@@ -1,0 +1,135 @@
+-- 1. Create the database
+CREATE DATABASE Book_Management;
+-- 2. Select the database
+USE Book_Management;
+-- 3. Create the Dimension Tables
+-- DimBook Table
+CREATE TABLE DimBook (
+BookID INT PRIMARY KEY,
+BookType VARCHAR(50),
+Cost DECIMAL(10, 2)
+);
+-- DimAuthor Table
+CREATE TABLE DimAuthor (
+AuthorID INT PRIMARY KEY,
+AuthorName VARCHAR(100),
+Age INT,
+Country VARCHAR(50)
+);
+-- DimPublication Table
+CREATE TABLE DimPublication (
+PublicationID INT PRIMARY KEY,
+PublicationName VARCHAR(100),
+Country VARCHAR(50),
+Year INT
+);
+-- DimLocation Table
+CREATE TABLE DimLocation (
+LocationID INT PRIMARY KEY,
+LocationName VARCHAR(100)
+);
+-- DimDate Table
+CREATE TABLE DimDate (
+DateID INT PRIMARY KEY,
+Year INT,
+Month INT,
+Day INT
+);
+-- 4. Create the Fact Table
+CREATE TABLE FactSales (
+BookID INT,
+AuthorID INT,
+PublicationID INT,
+LocationID INT,
+DateID INT,
+Quantity INT,
+Profit DECIMAL(15, 2),
+PRIMARY KEY (BookID, AuthorID, PublicationID, LocationID, DateID),
+FOREIGN KEY (BookID) REFERENCES DimBook(BookID),
+FOREIGN KEY (AuthorID) REFERENCES DimAuthor(AuthorID),
+FOREIGN KEY (PublicationID) REFERENCES DimPublication(PublicationID),
+FOREIGN KEY (LocationID) REFERENCES DimLocation(LocationID),
+FOREIGN KEY (DateID) REFERENCES DimDate(DateID)
+);
+-- 5. Insert Data into Dimension Tables
+-- Insert into DimBook
+INSERT INTO DimBook (BookID, BookType, Cost)
+VALUES
+(1, 'Mystery', 25.00),
+(2, 'Adventure', 30.00),
+(3, 'Romance', 22.00),
+(4, 'Fantasy', 35.00),
+(5, 'Self-Help', 28.00);
+-- Insert into DimAuthor
+INSERT INTO DimAuthor (AuthorID, AuthorName, Age, Country)
+VALUES
+(1, 'Author F', 55, 'USA'),
+(2, 'Author G', 42, 'UK'),
+(3, 'Author H', 37, 'India'),
+(4, 'Author I', 50, 'Australia'),
+(5, 'Author J', 46, 'Canada');
+-- Insert into DimPublication
+INSERT INTO DimPublication (PublicationID, PublicationName, Country, Year)
+VALUES
+(1, 'Publication A', 'USA', 2000),
+(2, 'Publication B', 'UK', 2005),
+(3, 'Publication C', 'India', 2012),
+(4, 'Publication D', 'Australia', 2018),
+(5, 'Publication E', 'Canada', 2022);
+-- Insert into DimLocation
+INSERT INTO DimLocation (LocationID, LocationName)
+VALUES
+(1, 'Chicago'),
+(2, 'Manchester'),
+(3, 'Delhi'),
+(4, 'Melbourne'),
+(5, 'Vancouver');
+-- Insert into DimDate
+INSERT INTO DimDate (DateID, Year, Month, Day)
+VALUES
+(1, 2024, 7, 10),
+(2, 2024, 7, 11),
+(3, 2024, 7, 12),
+(4, 2024, 7, 13),
+(5, 2024, 7, 14);
+-- 6. Insert Data into FactSales
+INSERT INTO FactSales (BookID, AuthorID, PublicationID, LocationID, DateID, Quantity,
+Profit)
+VALUES
+(1, 1, 1, 1, 1, 120, 3000.00),
+(2, 2, 2, 2, 2, 200, 6000.00),
+(3, 3, 3, 3, 3, 150, 3300.00),
+(4, 4, 4, 4, 4, 180, 6300.00),
+(5, 5, 5, 5, 5, 210, 5880.00);
+-- 7. Query: Get quantity and profit made per book type, location, author, and publication
+SELECT
+B.BookType,
+L.LocationName,
+A.AuthorName,
+P.PublicationName,
+SUM(FS.Quantity) AS TotalQuantity,
+SUM(FS.Profit) AS TotalProfit
+FROM
+FactSales FS
+JOIN
+DimBook B ON FS.BookID = B.BookID
+JOIN
+DimAuthor A ON FS.AuthorID = A.AuthorID
+JOIN
+DimPublication P ON FS.PublicationID = P.PublicationID
+JOIN
+DimLocation L ON FS.LocationID = L.LocationID
+GROUP BY
+B.BookType, L.LocationName, A.AuthorName, P.PublicationName;
+-- Select all data from DimBook
+SELECT * FROM DimBook;
+-- Select all data from DimAuthor
+SELECT * FROM DimAuthor;
+-- Select all data from DimPublication
+SELECT * FROM DimPublication;
+-- Select all data from DimLocation
+SELECT * FROM DimLocation;
+-- Select all data from DimDate
+SELECT * FROM DimDate;
+-- Select all data from FactSales
+SELECT * FROM FactSales;

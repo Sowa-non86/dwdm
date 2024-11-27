@@ -1,0 +1,115 @@
+-- Step 1: Create the database
+CREATE DATABASE Parth;
+-- Step 2: Use the database
+USE Parth;
+-- Step 3: Create Customers Table
+CREATE TABLE Customers (
+CustomerID INT PRIMARY KEY,
+CustomerName VARCHAR(100),
+ShippingAddress VARCHAR(255),
+BillingAddress VARCHAR(255)
+);
+-- Step 4: Insert data into Customers
+INSERT INTO Customers (CustomerID, CustomerName, ShippingAddress, BillingAddress)
+VALUES (1, 'Alice', '123 Elm St', '456 Oak St'),
+(2, 'Bob', '789 Pine St', '101 Maple St'),
+(3, 'Charlie', '654 Birch St', '789 Cedar St'),
+(4, 'David', '321 Spruce St', '654 Pine St'),
+(5, 'Eva', '987 Oak St', '321 Maple St'),
+(6, 'Frank', '456 Willow St', '987 Elm St'),
+(7, 'Grace', '789 Cedar St', '321 Spruce St');
+-- Step 5: Create Products Table
+CREATE TABLE Products (
+ProductID INT PRIMARY KEY,
+ProductName VARCHAR(100),
+ProductCategory VARCHAR(100)
+);
+-- Step 6: Insert data into Products
+INSERT INTO Products (ProductID, ProductName, ProductCategory)
+VALUES (1, 'Laptop', 'Electronics'),
+(2, 'Smartphone', 'Electronics'),
+(3, 'Tablet', 'Electronics'),
+(4, 'Headphones', 'Accessories'),
+(5, 'Charger', 'Accessories'),
+(6, 'Monitor', 'Electronics'),
+(7, 'Keyboard', 'Accessories');
+-- Step 7: Create Promotions Table
+CREATE TABLE Promotions (
+PromotionID INT PRIMARY KEY,
+PromotionName VARCHAR(100),
+DiscountPercent DECIMAL(5, 2)
+);
+-- Step 8: Insert data into Promotions
+INSERT INTO Promotions (PromotionID, PromotionName, DiscountPercent)
+VALUES (1, 'Summer Sale', 10),
+(2, 'Holiday Discount', 15),
+(3, 'New Year Offer', 20),
+(4, 'Festive Season', 25),
+(5, 'Clearance Sale', 30),
+(6, 'Black Friday', 35),
+(7, 'Cyber Monday', 40);
+-- Step 9: Create SalesRepresentatives Table
+CREATE TABLE SalesRepresentatives (
+SalesRepID INT PRIMARY KEY,
+SalesRepName VARCHAR(100)
+);
+-- Step 10: Insert data into SalesRepresentatives
+INSERT INTO SalesRepresentatives (SalesRepID, SalesRepName)
+VALUES (1, 'John Doe'),
+(2, 'Jane Smith'),
+(3, 'Chris Evans'),
+(4, 'Natalie Portman'),
+(5, 'Tom Holland'),
+(6, 'Scarlett Johansson'),
+(7, 'Robert Downey Jr.');
+-- Step 11: Create Currency Table
+CREATE TABLE Currency (
+CurrencyCode CHAR(3) PRIMARY KEY,
+CurrencyName VARCHAR(50),
+ConversionRateToDollar DECIMAL(10, 4)
+);
+-- Step 12: Insert data into Currency
+INSERT INTO Currency (CurrencyCode, CurrencyName, ConversionRateToDollar)
+VALUES ('USD', 'Dollar', 1.0),
+('AED', 'Dirham', 0.27),
+('EUR', 'Euro', 1.1),
+('INR', 'Rupee', 0.013),
+('GBP', 'Pound', 1.25),
+('CAD', 'Canadian Dollar', 0.75),
+('JPY', 'Yen', 0.0091);
+-- Step 13: Create OrderFacts Table
+CREATE TABLE OrderFacts (
+OrderID INT PRIMARY KEY,
+CustomerID INT,
+ProductID INT,
+PromotionID INT,
+SalesRepID INT,
+OrderDate DATE,
+RequestedShipDate DATE,
+Quantity INT,
+GrossAmount DECIMAL(10, 2),
+NetAmount DECIMAL(10, 2),
+Currency CHAR(3),
+FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+FOREIGN KEY (PromotionID) REFERENCES Promotions(PromotionID),
+FOREIGN KEY (SalesRepID) REFERENCES SalesRepresentatives(SalesRepID),
+FOREIGN KEY (Currency) REFERENCES Currency(CurrencyCode)
+);
+-- Step 14: Insert data into OrderFacts
+INSERT INTO OrderFacts (OrderID, CustomerID, ProductID, PromotionID, SalesRepID,
+OrderDate, RequestedShipDate, Quantity, GrossAmount, NetAmount, Currency)
+VALUES (1, 1, 1, 1, 1, '2024-08-01', '2024-08-05', 2, 2000, 1800, 'INR'),
+(2, 2, 2, 2, 2, '2024-08-02', '2024-08-06', 1, 1500, 1275, 'INR'),
+(3, 3, 3, 3, 3, '2024-08-03', '2024-08-07', 3, 3000, 2400, 'INR'),
+(4, 4, 4, 4, 4, '2024-08-04', '2024-08-08', 4, 1000, 750, 'INR'),
+(5, 5, 5, 5, 5, '2024-08-05', '2024-08-09', 5, 500, 350, 'INR'),
+(6, 6, 6, 6, 6, '2024-08-06', '2024-08-10', 1, 3000, 1950, 'INR'),
+(7, 7, 7, 7, 7, '2024-08-07', '2024-08-11', 2, 4000, 2400, 'INR');
+-- Step 15: Display data from all tables
+SELECT * FROM Customers;
+SELECT * FROM Products;
+SELECT * FROM Promotions;
+SELECT * FROM SalesRepresentatives;
+SELECT * FROM Currency;
+SELECT * FROM OrderFacts;
